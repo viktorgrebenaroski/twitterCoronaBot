@@ -11,12 +11,17 @@ const TwitterClient = new Twitter({
 
 let lastStats = Number(42872);
 cron.schedule('30 19 * * *', () => {
+  const datum = new Date();
   const coronaInfo = axios.get('https://www.trackcorona.live/api/countries/mk')
     .then(function(response) {
-      const twitterText = `Дневна статистика за 29/11/2020:
+      const twitterText = `Дневна статистика за ${datum.getDay()}.${datum.getMonth()}.${datum.getFullYear()}:
+___________________________________________________
+
 Излечени/Опоравени ${response.data.data[0].recovered - lastStats} од Корона Вирус!
-Податоци од WHO - Светска здраствена организација`
+___________________________________________________
+Податоци од СЗО - Светска здравствена организација`
       lastStats = response.data.data[0].recovered;
+      console.log(twitterText);
       TwitterClient.post('statuses/update', {
         status: twitterText
       })
