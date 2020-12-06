@@ -9,8 +9,9 @@ const TwitterClient = new Twitter({
   access_token_secret: process.env.ACCESS_SECRET
 });
 
-let lastStats = Number(42872);
-cron.schedule('30 19 * * *', () => {
+var lastStats = Number(42872);
+
+function postToTwitter() {
   const datum = new Date();
   const coronaInfo = axios.get('https://www.trackcorona.live/api/countries/mk')
     .then(function(response) {
@@ -31,4 +32,8 @@ ___________________________________________________
           console.log(error);
         });
       });
+}
+
+cron.schedule('10 20 * * *', () => {
+  postToTwitter();
 });
